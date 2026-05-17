@@ -1,1 +1,10 @@
-Test passed successfully
+========================================
+TEST RESULTS:
+========================================
+[==========] Running 1 test from 1 test case.
+[ RUN      ] Print.InFileStream
+[       OK ] Print.InFileStream (0 ms)
+[==========] 1 test from 1 test case ran. (1 ms total)
+[  PASSED  ] 1 test.
+========================================
+All tests passed successfully!
