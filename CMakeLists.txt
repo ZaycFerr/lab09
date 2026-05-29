@@ -25,3 +25,6 @@ target_include_directories(demo PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(demo print)
 
 install(TARGETS demo RUNTIME DESTINATION bin)
+enable_testing()
+
+

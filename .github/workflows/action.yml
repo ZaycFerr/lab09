@@ -17,14 +17,13 @@ jobs:
     - name: Download HunterGate
       run: mkdir -p cmake && wget https://raw.githubusercontent.com/cpp-pm/gate/master/cmake/HunterGate.cmake -O cmake/HunterGate.cmake
 
-    # Упрощаем конфигурацию, CMake сам увидит тесты внутри проекта
     - name: Configure CMake
       run: cmake -H. -B_build -DCMAKE_BUILD_TYPE=Release
 
     - name: Build project
       run: cmake --build _build
 
-    # Запускаем исполняемый файл тестов напрямую из папки сборки
+    # Возвращаем запуск тестов через встроенный модуль ctest
     - name: Run Tests
-      run: ./_build/check
+      run: cd _build && ctest --output-on-failure
 
