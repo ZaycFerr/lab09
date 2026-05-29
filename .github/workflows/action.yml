@@ -9,15 +9,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. Скачиваем код репозитория в облако
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # 2. Собираем Docker-образ (он сам скачает всё внутри по нашему Dockerfile)
     - name: Build Docker Image
       run: docker build -t logger .
 
-    # 3. Проверяем, что контейнер запускается и работает
+    # МЕНЯЕМ ТУТ: убираем букву t, оставляем только -i
     - name: Run Docker Container Test
       run: |
         mkdir -p logs
