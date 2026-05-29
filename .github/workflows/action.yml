@@ -1,32 +1,30 @@
 name: CMake Build and Test
 
-# Логика запуска: срабатывать при каждом пуше в ветку master
 on:
   push:
     branches: [ master ]
 
 jobs:
   build:
-    # Запускаем сборку на виртуальной машине Ubuntu в облаке GitHub
     runs-on: ubuntu-latest
 
     steps:
-    # 1. Скачиваем код нашего репозитория внутрь облака
     - name: Checkout code
       uses: actions/checkout@v3
       with:
         submodules: recursive
 
-    # 2. Настраиваем компиляторы GCC и CMake
-    - name: Configure CMake
-      run: |
-        cmake -H. -B_build -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON
+    - name: Download HunterGate
+      run: mkdir -p cmake && wget https://raw.githubusercontent.com/cpp-pm/gate/master/cmake/HunterGate.cmake -O cmake/HunterGate.cmake
 
-    # 3. Запускаем компиляцию проекта
+    # Упрощаем конфигурацию, CMake сам увидит тесты внутри проекта
+    - name: Configure CMake
+      run: cmake -H. -B_build -DCMAKE_BUILD_TYPE=Release
+
     - name: Build project
       run: cmake --build _build
 
-    # 4. Прогоняем тесты GTest, которые мы настроили в 7-й лабораторной
+    # Запускаем исполняемый файл тестов напрямую из папки сборки
     - name: Run Tests
-      run: cd _build && ctest --output-on-failure
+      run: ./_build/check
 
