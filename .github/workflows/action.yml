@@ -5,7 +5,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  build_and_test:
     runs-on: ubuntu-latest
 
     steps:
@@ -15,8 +15,7 @@ jobs:
     - name: Build Docker Image
       run: docker build -t logger .
 
-    # МЕНЯЕМ ТУТ: убираем букву t, оставляем только -i
     - name: Run Docker Container Test
       run: |
         mkdir -p logs
-        echo "test string from CI" | docker run -i -v "$(pwd)/logs:/home/logs" logger
+        echo "Hello from GitHub Actions!" | docker run -i -v "$(pwd)/logs:/home/logs" logger
