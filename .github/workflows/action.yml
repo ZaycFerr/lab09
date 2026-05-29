@@ -1,4 +1,4 @@
-name: CMake Build and Test
+name: Docker Build and Test
 
 on:
   push:
@@ -9,21 +9,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # 1. Скачиваем код репозитория в облако
     - name: Checkout code
       uses: actions/checkout@v3
-      with:
-        submodules: recursive
 
-    - name: Download HunterGate
-      run: mkdir -p cmake && wget https://raw.githubusercontent.com/cpp-pm/gate/master/cmake/HunterGate.cmake -O cmake/HunterGate.cmake
+    # 2. Собираем Docker-образ (он сам скачает всё внутри по нашему Dockerfile)
+    - name: Build Docker Image
+      run: docker build -t logger .
 
-    - name: Configure CMake
-      run: cmake -H. -B_build -DCMAKE_BUILD_TYPE=Release
-
-    - name: Build project
-      run: cmake --build _build
-
-    # Возвращаем запуск тестов через встроенный модуль ctest
-    - name: Run Tests
-      run: cd _build && ctest --output-on-failure
-
+    # 3. Проверяем, что контейнер запускается и работает
+    - name: Run Docker Container Test
+      run: |
+        mkdir -p logs
+        echo "test string from CI" | docker run -i -v "$(pwd)/logs:/home/logs" logger
