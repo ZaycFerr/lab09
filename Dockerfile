@@ -1,18 +1,16 @@
 FROM ubuntu:18.04
 
+# Устанавливаем компиляторы
 RUN apt update && apt install -yy gcc g++ cmake wget
 
-# Создаем структуру папок для Hunter внутри контейнера и подкладываем локальный кэш
-RUN mkdir -p /root/.hunter/_Base/Download/Toolchain/777286d/
-COPY .hunter/_Base/Download/Toolchain/777286d/heavy.tar.gz /root/.hunter/_Base/Download/Toolchain/777286d/heavy.tar.gz
-
-# Копируем остальные файлы проекта
+# Копируем файлы проекта
 COPY . /print
 WORKDIR /print
 
-RUN mkdir -p cmake && wget https://raw.githubusercontent.com/cpp-pm/gate/master/cmake/HunterGate.cmake -O cmake/HunterGate.cmake
+# Принудительно отключаем Hunter, чтобы CMake собирал проект напрямую через стандартный GCC
+RUN cmake -H. -B_build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=_install -DHUNTER_ENABLED=OFF
 
-RUN cmake -H. -B_build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=_install
+# Собираем и устанавливаем
 RUN cmake --build _build
 RUN cmake --build _build --target install
 
